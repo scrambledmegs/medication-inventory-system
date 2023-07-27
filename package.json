@@ -1,0 +1,9 @@
+{
+    "name": "medication-inventory-system",
+    "version": "1.0.0",
+    "description": "Server",
+    "main": "index.js",
+    "repository": "https://github.com/scrambledmegs/medication-inventory-system.git",
+    "author": "Megan Gonzalez <meganmgonzalez18@icloud.com>",
+    "license": "MIT"
+}
