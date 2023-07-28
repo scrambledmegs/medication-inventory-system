@@ -7,6 +7,27 @@ const port = process.env.PORT || 3005;
 // middleware
 app.use(express.json());
 
+// create new patient
+app.post('/patients', async(req, res) => {
+  try {
+    const newPatient = await db.query(
+      'INSERT INTO patient_information (patient_name, patient_mrn, patient_dob, patient_allergies, room_number, department) VALUES ($1, $2, $3, $4, $5, $6) returning *',
+      [req.body.patient_name, req.body.patient_mrn, req.body.patient_dob, req.body.patient_allergies, req.body.room_number, req.body.department]
+    );
+    console.log(newPatient);
+    res.status(201).json(
+      {
+        status: 'Successfully created new patient!',
+        data: {
+          patient: newPatient.rows[0]
+        }
+      }
+    );
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 // get all patients
 app.get('/patients', async(req, res) => {
   try {
