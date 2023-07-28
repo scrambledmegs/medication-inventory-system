@@ -85,6 +85,23 @@ app.put('/patients/:patientid', async(req, res) => {
   };
 });
 
+// delete patient by ID
+app.delete('/patients/:patientid', async(req, res) => {
+  try {
+    const deletedPatient = await db.query(
+      'DELETE FROM patient_information WHERE patient_id = $1',
+      [req.params.patientid]
+    );
+    res.status(204).json(
+      {
+        status: 'Patient successfully deleted from system.'
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  };
+});
+
 // Listens on port for connections
 app.listen(port, () => {
   console.log(`Server listening on Port: ${port}`);
