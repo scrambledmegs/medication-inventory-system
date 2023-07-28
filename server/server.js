@@ -28,6 +28,21 @@ app.get('/patients', async(req, res) => {
   };
 });
 
+// get patient by ID
+app.get('/patients/:patientid', async(req, res) => {
+  console.log(req.params.patientid)
+  try {
+    const patient = await db.query(
+      'SELECT * FROM patient_information WHERE patient_id = $1',
+      [req.params.patientid]
+    );
+    res.json(patient.rows[0]);
+    console.log(patient.rows[0])
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // Listens on port for connections
 app.listen(port, () => {
   console.log(`Server listening on Port: ${port}`);
