@@ -11,7 +11,7 @@ app.use(express.json());
 app.post('/patients', async(req, res) => {
   try {
     const newPatient = await db.query(
-      'INSERT INTO patient_information (patient_name, patient_mrn, patient_dob, patient_allergies, room_number, department) VALUES ($1, $2, $3, $4, $5, $6) returning *',
+      'INSERT INTO patient_data (patient_name, patient_mrn, patient_dob, patient_allergies, room_number, department) VALUES ($1, $2, $3, $4, $5, $6) returning *',
       [req.body.patient_name, req.body.patient_mrn, req.body.patient_dob, req.body.patient_allergies, req.body.room_number, req.body.department]
     );
     console.log(newPatient);
@@ -26,21 +26,26 @@ app.post('/patients', async(req, res) => {
   } catch (err) {
     console.log(err);
   };
-})
+});
 
 // get all patients
 app.get('/patients', async(req, res) => {
   try {
     const patients = await db.query(
-      'SELECT * FROM patient_information'
+      'SELECT * FROM patient_data'
     );
-    console.log(patients.rows);
+    const patient_med_data = await db.query(
+      'SELECT * FROM patient_data INNER JOIN medication_data ON patient_data.patient_id = medication_data.patient_id;'
+    );
+    console.log(patient_med_data.rows);
+    console.log('Patients:', patients.rows)
     res.status(200).json(
       {
         status: 'Success!',
-        results: patients.rows.length,
+        results: patient_med_data.rows.length,
         data: {
-          patients: patients.rows
+          // patients: patients.rows,
+          patients: patient_med_data.rows
         }
       }
     );
@@ -53,12 +58,15 @@ app.get('/patients', async(req, res) => {
 app.get('/patients/:patientid', async(req, res) => {
   console.log(req.params.patientid)
   try {
-    const patient = await db.query(
-      'SELECT * FROM patient_information WHERE patient_id = $1',
-      [req.params.patientid]
-    );
-    res.json(patient.rows[0]);
-    console.log(patient.rows[0])
+    // const patient = await db.query(
+    //   'SELECT * FROM patient_data WHERE patient_id = $1',
+    //   [req.params.patientid]
+    // );
+    const patient_medication = await db.query(
+      'SELECT * FROM patient_data INNER JOIN medication_data ON patient_data.patient_id = medication_data.patient_id where patient_data.patient_id = $1;', [req.params.patientid]
+    )
+    res.json(patient_medication.rows);
+    console.log(patient_medication.rows)
   } catch (err) {
     console.log(err);
   };
@@ -68,7 +76,7 @@ app.get('/patients/:patientid', async(req, res) => {
 app.put('/patients/:patientid', async(req, res) => {
   try {
     const updatedPatient = await db.query(
-      'UPDATE patient_information SET patient_name = $1, patient_mrn = $2, patient_dob = $3, patient_allergies = $4, room_number = $5, department = $6 WHERE patient_id = $7 RETURNING *',
+      'UPDATE patient_data SET patient_name = $1, patient_mrn = $2, patient_dob = $3, patient_allergies = $4, room_number = $5, department = $6 WHERE patient_id = $7 RETURNING *',
       [req.body.patient_name, req.body.patient_mrn, req.body.patient_dob, req.body.patient_allergies, req.body.room_number, req.body.department, req.params.patientid]
     );
     console.log(updatedPatient);
@@ -89,7 +97,7 @@ app.put('/patients/:patientid', async(req, res) => {
 app.delete('/patients/:patientid', async(req, res) => {
   try {
     const deletedPatient = await db.query(
-      'DELETE FROM patient_information WHERE patient_id = $1',
+      'DELETE FROM patient_data WHERE patient_id = $1',
       [req.params.patientid]
     );
     res.status(204).json(
