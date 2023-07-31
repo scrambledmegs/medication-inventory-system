@@ -1,10 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const db = require('./db/index');
 const app = express();
 const port = process.env.PORT || 3005;
 
 // middleware
+app.use(cors())
 app.use(express.json());
 
 // create new patient
@@ -34,18 +36,13 @@ app.get('/patients', async(req, res) => {
     const patients = await db.query(
       'SELECT * FROM patient_data'
     );
-    const patient_med_data = await db.query(
-      'SELECT * FROM patient_data INNER JOIN medication_data ON patient_data.patient_id = medication_data.patient_id;'
-    );
-    console.log(patient_med_data.rows);
-    console.log('Patients:', patients.rows)
     res.status(200).json(
       {
         status: 'Success!',
-        results: patient_med_data.rows.length,
+        results: patients.rows.length,
         data: {
           // patients: patients.rows,
-          patients: patient_med_data.rows
+          patients: patients.rows
         }
       }
     );
@@ -58,15 +55,12 @@ app.get('/patients', async(req, res) => {
 app.get('/patients/:patientid', async(req, res) => {
   console.log(req.params.patientid)
   try {
-    // const patient = await db.query(
-    //   'SELECT * FROM patient_data WHERE patient_id = $1',
-    //   [req.params.patientid]
-    // );
-    const patient_medication = await db.query(
-      'SELECT * FROM patient_data INNER JOIN medication_data ON patient_data.patient_id = medication_data.patient_id where patient_data.patient_id = $1;', [req.params.patientid]
-    )
-    res.json(patient_medication.rows);
-    console.log(patient_medication.rows)
+    const patient = await db.query(
+      'SELECT * FROM patient_data WHERE patient_id = $1',
+      [req.params.patientid]
+    );
+    res.json(patient.rows);
+    console.log(patient.rows)
   } catch (err) {
     console.log(err);
   };
