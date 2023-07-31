@@ -23,23 +23,23 @@ const PatientList = (props) => {
   return (
     <div>
       <h1>Patient List</h1>
-      {patients.map(patient => {
+      {patients && patients.map(patient => {
         return (
-          <ListGroup as='ul'>
+          <ListGroup as='ul' key={patient.patient_id}>
             <ListGroup.Item as='li' variant='primary'>
               {patient.patient_name}
             </ListGroup.Item>
             <ListGroup.Item as='li'>
-              {patient.patient_mrn}
+              MRN: {patient.patient_mrn}
             </ListGroup.Item>
             <ListGroup.Item as='li'>
-              {patient.patient_dob}
+              DOB: {patient.patient_dob}
             </ListGroup.Item>
             <ListGroup.Item as='li'>
-              {patient.patient_allergies}
+              Allergies: {patient.patient_allergies}
             </ListGroup.Item>
             <ListGroup.Item as='li'>
-              {patient.room_number}
+              Room: {patient.room_number}
             </ListGroup.Item>
             <ListGroup.Item as='li'>
               {patient.department}
