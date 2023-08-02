@@ -15,7 +15,7 @@ const Home = () => {
         <Col>
           <h1>Medication Admin/Inventory System</h1>
           <div className='click-begin'>
-            <Link to='/patientlist'>
+            <Link to='/patients'>
               <Button variant='primary'>Click to Begin</Button>
             </Link>
           </div>
