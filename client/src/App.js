@@ -1,7 +1,10 @@
 import React from 'react';
 import Home from './pages/Home';
 import PatientList from './pages/PatientList';
+import Patient from './pages/Patient';
 import './App.css';
+
+// React Router
 import { Link, Route, Routes } from 'react-router-dom';
 
 // Bootstrap
@@ -32,7 +35,7 @@ function App() {
                 <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="me-auto">
                     <Nav.Link as={Link} to="/">Home</Nav.Link>
-                    <Nav.Link as={Link} to='/patientlist'>Patient List</Nav.Link>
+                    <Nav.Link as={Link} to='/patients'>Patient List</Nav.Link>
                     <NavDropdown title="More Options" id="basic-nav-dropdown">
                       <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                       <NavDropdown.Divider />
@@ -48,7 +51,10 @@ function App() {
         </Row>
             <Routes> 
               <Route path='/' element={<Home />} />
-              <Route path='/patientlist' element={<PatientList />} />
+              <Route path='/patients'>
+                <Route index element={<PatientList />}/>
+                <Route path=':patientid' element={<Patient />} />
+              </Route>
             </Routes>
       </Container>
     </PatientsContextProvider>
