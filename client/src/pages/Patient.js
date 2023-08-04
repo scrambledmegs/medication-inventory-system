@@ -20,7 +20,7 @@ const Patient = () => {
 
   // Fetch List of Meds by Patient ID
   useEffect(() => {
-    PatientData.get(`http://localhost:4000/patients/${selectedPatient.id}/medications`)
+    PatientData.get(`/${selectedPatient.id}/medications`)
       .then(response => {
         console.log('RESPONSE MEDICATIONS:', response);
         setPatientMedications(response.data);
