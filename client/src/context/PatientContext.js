@@ -6,10 +6,12 @@ export const PatientContextProvider = props => {
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState({});
   const [patientMedications, setPatientMedications] = useState([]);
+  const [selectedMedication, setSelectedMedication] = useState({});
 
   console.log('PATIENTS PC:', patients)
   console.log('SELECTED PATIENT PC:', selectedPatient);
-  console.log('PATIENTMEDICATIONS PC:', patientMedications)
+  console.log('PATIENTMEDICATIONS PC:', patientMedications);
+  console.log('SELECTED MEDICATION PC:', selectedMedication);
 
   return (
     <PatientContext.Provider 
@@ -19,7 +21,9 @@ export const PatientContextProvider = props => {
         selectedPatient, 
         setSelectedPatient,
         patientMedications,
-        setPatientMedications
+        setPatientMedications,
+        selectedMedication,
+        setSelectedMedication
       }}
     >
       {props.children}
