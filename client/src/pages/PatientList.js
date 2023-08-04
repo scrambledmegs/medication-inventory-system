@@ -15,7 +15,7 @@ const PatientList = () => {
 
   // Get patient list from database
   useEffect(() => {
-    PatientData.get('http://localhost:4000/patients')
+    PatientData.get('/')
       .then(response => {
         console.log('RESPONSE PATIENT LIST:', response);
         setPatients(response.data.data.patients);
@@ -24,7 +24,7 @@ const PatientList = () => {
 
   // Delete Patient
     const handleDelete = async (patientId) => {
-      PatientData.delete(`http://localhost:4000/patients/${patientId}`)
+      PatientData.delete(`/${patientId}`)
         .then(() => {
           setPatients(prevPatients => {
             const updatedPatients = prevPatients.filter(patient => patient.id !== patientId);
@@ -40,7 +40,7 @@ const PatientList = () => {
     }
 
     const handleSelectPatient = patientId => {
-      PatientData.get(`http://localhost:4000/patients/${patientId}`)
+      PatientData.get(`/${patientId}`)
         .then(response => {
           console.log('RESPONSE SELECT:', response);
           selectPatient(patientId);
