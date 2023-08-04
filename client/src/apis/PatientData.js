@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-export default axios.create(
+const patientData = axios.create(
   {
     baseURL: 'http://localhost:4000/patients'
   }
 );
+
+export default patientData;
