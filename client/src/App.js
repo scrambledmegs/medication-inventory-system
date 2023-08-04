@@ -2,6 +2,8 @@ import React from 'react';
 import Home from './pages/Home';
 import PatientList from './pages/PatientList';
 import Patient from './pages/Patient';
+import PatientMedication from './pages/PatientMedication';
+import { PatientContextProvider } from './context/PatientContext';
 import './App.css';
 
 // React Router
@@ -16,11 +18,12 @@ import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { PatientsContextProvider } from './context/PatientsContext';
+
 
 function App() {
+
   return (
-    <PatientsContextProvider>
+    <PatientContextProvider>
       <Container fluid>
         <Row xs={1}>
           <Col className='testing'>
@@ -30,7 +33,7 @@ function App() {
               data-bs-theme="dark"
             >
               <Container>
-              <Navbar.Brand>Pyxis</Navbar.Brand>
+              <Navbar.Brand>Meds</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                   <Nav className="me-auto">
@@ -49,15 +52,14 @@ function App() {
             </Navbar>
           </Col>
         </Row>
-            <Routes> 
-              <Route path='/' element={<Home />} />
-              <Route path='/patients'>
-                <Route index element={<PatientList />}/>
-                <Route path=':patientid' element={<Patient />} />
-              </Route>
-            </Routes>
+        <Routes> 
+          <Route path='/' element={<Home />} />
+          <Route path='/patients' element={<PatientList />} />
+          <Route path='/patients/:patientid' element={<Patient />} />
+          <Route path = '/patients/:patientid/:medicationid' element={<PatientMedication />} />
+        </Routes>
       </Container>
-    </PatientsContextProvider>
+    </PatientContextProvider>
   );
 };
 
