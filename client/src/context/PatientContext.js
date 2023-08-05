@@ -13,6 +13,13 @@ export const PatientContextProvider = props => {
   console.log('PATIENTMEDICATIONS PC:', patientMedications);
   console.log('SELECTED MEDICATION PC:', selectedMedication);
 
+  const addPatient = patient => {
+    setPatients([
+      ...patients,
+      patient
+    ]);
+  };
+
   return (
     <PatientContext.Provider 
       value={{
@@ -23,7 +30,8 @@ export const PatientContextProvider = props => {
         patientMedications,
         setPatientMedications,
         selectedMedication,
-        setSelectedMedication
+        setSelectedMedication,
+        addPatient
       }}
     >
       {props.children}
