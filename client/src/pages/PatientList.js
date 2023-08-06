@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 // Bootstrap 
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button'
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 const PatientList = () => {
   const { patients, setPatients, setSelectedPatient } = useContext(PatientContext);
@@ -52,11 +54,17 @@ const PatientList = () => {
     };
 
   return (
-    <div>
+    <main>
       <h1>Patient List</h1>
+      <Row>
+        <Col>
         {patients && patients.map(patient => {
           return (
-            <ListGroup as='ul' key={patient.id}>
+            <ListGroup
+              className='patient-list'
+              as='ul' 
+              key={patient.id}
+            >
               <ListGroup.Item 
                 as='li' 
                 variant='primary'
@@ -86,10 +94,13 @@ const PatientList = () => {
                   Discharge Patient</Button>
               </ListGroup.Item>
             </ListGroup>
-          )
-        })}
-    </div>
-  )
-}
+            );
+          })
+          };
+        </Col>
+      </Row>
+    </main>
+  );
+};
 
 export default PatientList;
