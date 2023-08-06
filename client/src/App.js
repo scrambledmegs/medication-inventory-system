@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Home from './pages/Home';
 import PatientList from './pages/PatientList';
 import Patient from './pages/Patient';
+import AdmitPatient from './pages/AdmitPatient';
 import PatientMedication from './pages/PatientMedication';
+import MedicationList from './pages/MedicationList';
 import { PatientContextProvider } from './context/PatientContext';
 import './App.css';
 
@@ -18,13 +20,16 @@ import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { MedicationContextProvider } from './context/MedicationContext';
 
 
 function App() {
 
   return (
-    <PatientContextProvider>
-      <Container fluid>
+    <div className='App'>
+    <PatientContextProvider >
+      <MedicationContextProvider>
+      <Container>
         <Row xs={1}>
           <Col className='testing'>
             <Navbar 
@@ -40,10 +45,18 @@ function App() {
                     <Nav.Link as={Link} to="/">Home</Nav.Link>
                     <Nav.Link as={Link} to='/patients'>Patient List</Nav.Link>
                     <NavDropdown title="More Options" id="basic-nav-dropdown">
-                      <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+                      <NavDropdown.Item 
+                        as={Link}
+                        to='/admitPatient'
+                      >
+                        Admit Patient
+                      </NavDropdown.Item>
                       <NavDropdown.Divider />
-                      <NavDropdown.Item href="#action/3.4">
-                        Separated link
+                      <NavDropdown.Item 
+                        as={Link}
+                        to='/medications'
+                      >
+                        Medication List
                       </NavDropdown.Item>
                     </NavDropdown>
                   </Nav>
@@ -54,12 +67,16 @@ function App() {
         </Row>
         <Routes> 
           <Route path='/' element={<Home />} />
+          <Route path='/admitPatient' element={<AdmitPatient />} />
           <Route path='/patients' element={<PatientList />} />
           <Route path='/patients/:patientid' element={<Patient />} />
           <Route path = '/patients/:patientid/:medicationid' element={<PatientMedication />} />
+          <Route path='/medications' element={<MedicationList />} />
         </Routes>
       </Container>
+      </MedicationContextProvider>
     </PatientContextProvider>
+    </div>
   );
 };
 
