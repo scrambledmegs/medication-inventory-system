@@ -1,20 +1,29 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { PatientContext } from '../context/PatientContext';
 import MedicationData from '../apis/MedicationData';
 
 // Bootstrap
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 const PatientMedication = () => {
   const { 
     selectedMedication, 
     setSelectedMedication 
   } = useContext(PatientContext);
+  const [lowStockAlert, setLowStockAlert] = useState(false)
+  const [button, setButton] = useState(false)
+
+  const handleAlertClose = () => setLowStockAlert(false)
+  const handleAlertShow = () => setLowStockAlert(true)
+
+  const buttonOn = () => setButton(false)
+  const buttonOff = () => setButton(true)
+
 
   console.log('SELECTED MEDICATION IN PM:', selectedMedication)
 
-  const updateMedicationQuantity = (e) => {
-    console.log('E:', e)
+  const updateMedicationQuantity = () => {
     MedicationData.put(`/${selectedMedication.medication_id}`, selectedMedication).then((resp) => {
       console.log('my data', resp.data);
       setSelectedMedication((prevMed) => {
@@ -25,6 +34,16 @@ const PatientMedication = () => {
         };
       });
     });
+    if (selectedMedication.quantity <= 5) {
+      handleAlertShow()
+      buttonOn()
+      // alert('Send message to pharmacy')
+    } else if (selectedMedication.quantity > 5) {
+      handleAlertClose()
+      buttonOn()
+    } if (selectedMedication.quantity <= 0) {
+      buttonOff()
+    }
   };
 
   return (
@@ -36,9 +55,28 @@ const PatientMedication = () => {
       <br />
       <Button 
         onClick={() => updateMedicationQuantity()}
+        disabled={button}
       >
         Remove Medication
       </Button>
+      <Modal
+        show={lowStockAlert}
+        onHide={handleAlertClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Low Inventory Alert</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Pharmacy has been notified of low inventory and will restock the floor shortly.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleAlertClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
