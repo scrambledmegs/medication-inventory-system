@@ -19,14 +19,33 @@ const AdmitPatient = () => {
   const [department, setDepartment] = useState('')
   const [submitMessage, setSubmitMessage] = useState(false);
   const [validated, setValidated] = useState(false);
+  // const [admitButton, setAdmitButton] = useState(true);
 
 
-  const submitMessageShow = () => setSubmitMessage(true)
-  const submitMessageHide = () => setSubmitMessage(false)
+  // Functions to show or hide modal after submitting patient data
+  const submitMessageShow = () => setSubmitMessage(true);
+  const submitMessageHide = () => setSubmitMessage(false);
 
-  // *** Need to fix ***
-  const handleSubmit = async(event) => {
-    event.preventDefault()
+  // Function to disable/activate admit patient button based on form validity
+  // const admitButtonActive = () => setAdmitButton(false)
+  // const admitButtonDisabled = () => setAdmitButton(true)
+
+  // Handles form validity
+  const handleSubmit = event => {
+    const form = event.currentTarget;
+    if (form.checkValidity() === false) {
+      event.preventDefault();
+      event.stopPropagation();
+      submitMessageHide();
+    }
+    setValidated(true);
+    admitNewPatient(event);
+    // admitButtonActive();
+  }
+
+  // Sends new patient data to the patient table 
+  const admitNewPatient = async(event) => {
+    event.preventDefault();
     try {
       const response = await PatientData.post('/', {
         name,
@@ -36,28 +55,27 @@ const AdmitPatient = () => {
         room_number: roomNumber,
         department
       });
-      submitMessageShow()
-      console.log('ADMIT RESPONSE:', response.data.data)
-      addPatient(response.data.data.patient)
-      setName('')
-      setMrn('')
-      setDob('')
-      setAllergies('')
-      setRoomNumber('')
-      setDepartment('')
+      console.log('ADMIT RESPONSE:', response.data.data);
+      addPatient(response.data.data.patient);
+      submitMessageShow();
+      setName('');
+      setMrn('');
+      setDob('');
+      setAllergies('');
+      setRoomNumber('');
+      setDepartment('');
     } catch (err) {
       console.log('Error:', err);
-      submitMessageHide()
-    }
+    };
   };
 
   return (
     <main>
       <h1>New Patient Admit</h1>
       <Form 
-        onSubmit={handleSubmit}
         noValidate
         validated={validated}
+        onSubmit={handleSubmit}
       >
         <Row>
           <Col>
@@ -67,10 +85,9 @@ const AdmitPatient = () => {
                 required
                 type='text'
                 value={name}
-                placeholder='Patient Name'
+                placeholder='ex: Marissa Cooper'
                 onChange={e => setName(e.target.value)}
               />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Col>
           <Col>
@@ -80,10 +97,9 @@ const AdmitPatient = () => {
                 required
                 type='text'
                 value={mrn}
-                placeholder='MRN'
+                placeholder='ex: 1234567'
                 onChange={e => setMrn(e.target.value)}
               />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Col>
         </Row>
@@ -98,7 +114,6 @@ const AdmitPatient = () => {
                 placeholder='ex: 06/14/1991'
                 onChange={e => setDob(e.target.value)}
               />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Col>
           <Col>
@@ -108,10 +123,9 @@ const AdmitPatient = () => {
                 required
                 type='text'
                 value={allergies}
-                placeholder='Allergies'
+                placeholder='ex: Penicillin'
                 onChange={e => setAllergies(e.target.value)}
               />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Col>
         </Row>
@@ -123,7 +137,7 @@ const AdmitPatient = () => {
                 required
                 type='text'
                 value={roomNumber}
-                placeholder='Room Number'
+                placeholder='ex: 10'
                 onChange={e => setRoomNumber(e.target.value)}
               />
             </Form.Group>
@@ -163,7 +177,10 @@ const AdmitPatient = () => {
           Patient successfully admitted to system.
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={submitMessageHide}>
+          <Button 
+            variant="secondary"
+            onClick={submitMessageHide}
+          >
             Close
           </Button>
         </Modal.Footer>
