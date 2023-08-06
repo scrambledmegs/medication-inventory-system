@@ -10,13 +10,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 const AdmitPatient = () => {
-  const { addPatient } = useContext(PatientContext)
-  const [name, setName] = useState('')
-  const [mrn, setMrn] = useState('')
-  const [dob, setDob] = useState('')
-  const [allergies, setAllergies] = useState('')
-  const [roomNumber, setRoomNumber] = useState('')
-  const [department, setDepartment] = useState('')
+  const { addPatient } = useContext(PatientContext);
+  const [name, setName] = useState('');
+  const [mrn, setMrn] = useState('');
+  const [dob, setDob] = useState('');
+  const [allergies, setAllergies] = useState('');
+  const [roomNumber, setRoomNumber] = useState('');
+  const [department, setDepartment] = useState('');
   const [submitMessage, setSubmitMessage] = useState(false);
   const [validated, setValidated] = useState(false);
   // const [admitButton, setAdmitButton] = useState(true);
@@ -186,7 +186,7 @@ const AdmitPatient = () => {
         </Modal.Footer>
       </Modal>
     </main>
-  )
-}
+  );
+};
 
-export default AdmitPatient
+export default AdmitPatient;
