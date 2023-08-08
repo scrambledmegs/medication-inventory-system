@@ -4,29 +4,45 @@ import { MedicationContext } from '../context/MedicationContext';
 
 // Bootstrap
 import ListGroup from 'react-bootstrap/ListGroup';
+import Button from 'react-bootstrap/Button';
 
 const MedicationList = () => {
   const { medications, setMedications} = useContext(MedicationContext);
 
+  // Get medication list from database
   useEffect(() => {
     MedicationData.get('/')
       .then(response => {
-        console.log('RESPONSE MEDICATION LIST:', response)
-        setMedications(response.data.data.medications)
-      })
-  },[])
+        console.log('RESPONSE MEDICATION LIST:', response);
+        setMedications(response.data.data.medications);
+      });
+  },[]);
+
+  // Delete Medication
+  const handleDelete = async (medicationId) => {
+    MedicationData.delete(`/${medicationId}`)
+      .then(() => {
+        setMedications(prevMedications => {
+          const updatedMedications = prevMedications.filter(medication => medication.id !== medicationId);
+          return updatedMedications;
+        });
+      });
+  };
 
   return (
     <main>
       <h1>Medication List</h1>
       {medications && medications.map(medication => {
         return (
-          <ListGroup as='ul' key={medication.id}>
+          <ListGroup 
+            as='ul' 
+            key={medication.id}
+          >
               <ListGroup.Item 
                 as='li' 
                 variant='primary'
                 action
-                >
+              >
                 {medication.med_name}
               </ListGroup.Item>
               <ListGroup.Item as='li'>
@@ -44,7 +60,12 @@ const MedicationList = () => {
               <ListGroup.Item as='li'>
                 {medication.high_alert}
               </ListGroup.Item>
-              <ListGroup.Item as='li'></ListGroup.Item>
+              <ListGroup.Item as='li'>
+                <Button
+                onClick={() => handleDelete(medication.id)}>
+                  Delete Medication
+                </Button>
+              </ListGroup.Item>
           </ListGroup>
         )}
       )}
