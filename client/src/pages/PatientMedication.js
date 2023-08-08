@@ -13,39 +13,33 @@ const PatientMedication = () => {
   } = useContext(PatientContext);
 
   const [lowStockAlert, setLowStockAlert] = useState(false)
-  const [button, setButton] = useState(false)
 
+  // Functions to display/disable modal alert
   const handleAlertClose = () => setLowStockAlert(false)
   const handleAlertShow = () => setLowStockAlert(true)
-
-  const buttonOn = () => setButton(false)
-  const buttonOff = () => setButton(true)
 
   console.log('SELECTED MEDICATION IN PM:', selectedMedication);
 
   const updateMedicationQuantity = () => {
-    MedicationData.patch(`/${selectedMedication.medication_id}`, selectedMedication)
-      .then((resp) => {
-        console.log('my data', resp.data);
-        setSelectedMedication((prevMed) => {
+    MedicationData.put(`/${selectedMedication.medication_id}`, selectedMedication)
+      .then(response => {
+        console.log('my data', response.data);
+        setSelectedMedication(prevMed => {
           console.log(prevMed);
-          console.log('QUANTITY BEFORE RETURN:',selectedMedication.quantity);
           return {
             ...prevMed,
             quantity: selectedMedication.quantity -1
           };
         });
         console.log('QUANTITY AFTER RETURN:', selectedMedication.quantity);
+      })
+      .then(() => {
+        if (selectedMedication.quantity <=5) {
+          handleAlertShow();
+        } else {
+          handleAlertClose();
+        };
       });
-      if (selectedMedication.quantity <= 5) {
-        handleAlertShow();
-        buttonOn();
-      } else if (selectedMedication.quantity > 5) {
-        handleAlertClose();
-        buttonOn();
-      } if (selectedMedication.quantity <= 0) {
-        buttonOff();
-      }
   };
 
   return (
@@ -57,7 +51,7 @@ const PatientMedication = () => {
       <br />
       <Button 
         onClick={() => updateMedicationQuantity()}
-        disabled={button}
+        disabled={selectedMedication.quantity == 0 ? true : false}
       >
         Remove Medication
       </Button>
