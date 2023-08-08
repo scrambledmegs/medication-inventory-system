@@ -11,6 +11,7 @@ const PatientMedication = () => {
     selectedMedication, 
     setSelectedMedication 
   } = useContext(PatientContext);
+
   const [lowStockAlert, setLowStockAlert] = useState(false)
   const [button, setButton] = useState(false)
 
@@ -20,30 +21,31 @@ const PatientMedication = () => {
   const buttonOn = () => setButton(false)
   const buttonOff = () => setButton(true)
 
-
-  console.log('SELECTED MEDICATION IN PM:', selectedMedication)
+  console.log('SELECTED MEDICATION IN PM:', selectedMedication);
 
   const updateMedicationQuantity = () => {
-    MedicationData.put(`/${selectedMedication.medication_id}`, selectedMedication).then((resp) => {
-      console.log('my data', resp.data);
-      setSelectedMedication((prevMed) => {
-        console.log(prevMed)
-        return {
-          ...prevMed,
-          quantity: selectedMedication.quantity -1
-        };
+    MedicationData.patch(`/${selectedMedication.medication_id}`, selectedMedication)
+      .then((resp) => {
+        console.log('my data', resp.data);
+        setSelectedMedication((prevMed) => {
+          console.log(prevMed);
+          console.log('QUANTITY BEFORE RETURN:',selectedMedication.quantity);
+          return {
+            ...prevMed,
+            quantity: selectedMedication.quantity -1
+          };
+        });
+        console.log('QUANTITY AFTER RETURN:', selectedMedication.quantity);
       });
-    });
-    if (selectedMedication.quantity <= 5) {
-      handleAlertShow()
-      buttonOn()
-      // alert('Send message to pharmacy')
-    } else if (selectedMedication.quantity > 5) {
-      handleAlertClose()
-      buttonOn()
-    } if (selectedMedication.quantity <= 0) {
-      buttonOff()
-    }
+      if (selectedMedication.quantity <= 5) {
+        handleAlertShow();
+        buttonOn();
+      } else if (selectedMedication.quantity > 5) {
+        handleAlertClose();
+        buttonOn();
+      } if (selectedMedication.quantity <= 0) {
+        buttonOff();
+      }
   };
 
   return (
@@ -51,7 +53,7 @@ const PatientMedication = () => {
       <h1>Patient Medication</h1>
       {selectedMedication.med_name}
       <br />
-      {selectedMedication.quantity}
+      <p>Medication Inventory: {selectedMedication.quantity}</p>
       <br />
       <Button 
         onClick={() => updateMedicationQuantity()}
