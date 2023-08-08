@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 // Bootstrap 
 import ListGroup from 'react-bootstrap/ListGroup';
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
@@ -49,7 +49,7 @@ const PatientList = () => {
           navigate(`/patients/${patientId}`);
         })
         .catch (error => {
-          console.log('error:', error);
+          console.log('Error:', error);
         });
     };
 
@@ -58,45 +58,47 @@ const PatientList = () => {
       <h1>Patient List</h1>
       <Row>
         <Col>
-        {patients && patients.map(patient => {
-          return (
-            <ListGroup
-              className='patient-list'
-              as='ul' 
-              key={patient.id}
-            >
-              <ListGroup.Item 
-                as='li' 
-                variant='primary'
-                action onClick={() => handleSelectPatient(patient.id)}
-                >
-                {patient.name}
-              </ListGroup.Item>
-              <ListGroup.Item as='li'>
-                MRN: {patient.mrn}
-              </ListGroup.Item>
-              <ListGroup.Item as='li'>
-                DOB: {patient.dob}
-              </ListGroup.Item>
-              <ListGroup.Item as='li'>
-                Allergies: {patient.allergies}
-              </ListGroup.Item>
-              <ListGroup.Item as='li'>
-                Room: {patient.room_number}
-              </ListGroup.Item>
-              <ListGroup.Item as='li'>
-                {patient.department}
-              </ListGroup.Item>
-              <ListGroup.Item as='li'>
-                <Button
-                  onClick={()=> handleDelete(patient.id)}
-                >
-                  Discharge Patient</Button>
-              </ListGroup.Item>
-            </ListGroup>
-            );
-          })
-          };
+          {patients && patients.map(patient => {
+            return (
+              <ListGroup
+                className='patient-list'
+                as='ul' 
+                key={patient.id}
+              >
+                <ListGroup.Item 
+                  as='li' 
+                  variant='primary'
+                  action 
+                  onClick={() => handleSelectPatient(patient.id)}
+                  >
+                  {patient.name}
+                </ListGroup.Item>
+                <ListGroup.Item as='li'>
+                  MRN: {patient.mrn}
+                </ListGroup.Item>
+                <ListGroup.Item as='li'>
+                  DOB: {patient.dob}
+                </ListGroup.Item>
+                <ListGroup.Item as='li'>
+                  Allergies: {patient.allergies}
+                </ListGroup.Item>
+                <ListGroup.Item as='li'>
+                  Room: {patient.room_number}
+                </ListGroup.Item>
+                <ListGroup.Item as='li'>
+                  {patient.department}
+                </ListGroup.Item>
+                <ListGroup.Item as='li'>
+                  <Button
+                    onClick={()=> handleDelete(patient.id)}
+                  >
+                    Discharge Patient
+                  </Button>
+                </ListGroup.Item>
+              </ListGroup>
+              );
+            })
+          }
         </Col>
       </Row>
     </main>
