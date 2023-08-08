@@ -25,7 +25,7 @@ app.post('/patients', async(req, res) => {
       }
     );
   } catch (err) {
-    console.log('Error:', err);
+    console.log('Error 1:', err);
   };
 });
 
@@ -155,15 +155,53 @@ app.put('/patients/:patientid', async(req, res) => {
 // Update Medication by ID
 app.put('/medications/:medicationid', async(req, res) => {
   try {
+    const testing = req.body.quantity -1
     const updatedMedication = await db.query(
       'UPDATE medication SET med_name = $1, quantity = $2, dose = $3, form = $4, frequency = $5, high_alert = $6 WHERE id = $7 RETURNING *',
-      [req.body.med_name, req.body.quantity, req.body.dose, req.body.form, req.body.frequency, req.body.high_alert, req.params.medicationid]
+      [req.body.med_name, testing, req.body.dose, req.body.form, req.body.frequency, req.body.high_alert, req.params.medicationid]
     );
     res.status(200).json(
       {
         status: 'Successfully updated medication information!',
         data: {
           medication: updatedMedication.rows[0]
+        }
+      }
+    );
+  } catch (err) {
+    console.log('Error:', err);
+  };
+});
+
+// Patch Medication by ID
+app.patch('/medications/:medicationid', async(req, res) => {
+  try {
+    const medication = await db.query(
+      `SELECT * FROM medication 
+      WHERE medication.id = ${req.params.medicationid}`
+    );
+
+    const updateData = [];
+    const object = req.body;
+    let query = 'UPDATE medication SET';
+
+    for (const key in object) {
+      console.log(key);
+      if (object[key]){ 
+        updateData.push(object[key]);
+        query = query + ` ${key} = $${updateData.length},`
+      };
+    };
+    
+    query = query.substring(0, query.length - 1) + ` WHERE id = ${req.params.medicationid} RETURNING *`;
+    console.log(updateData, query);
+
+    const updatedMedication = await db.query(query, updateData);
+    res.status(200).json(
+      {
+        status: 'Successfully updated medication information!',
+        data: {
+          "medications":updatedMedication.rows[0]
         }
       }
     );
@@ -205,6 +243,47 @@ app.delete('/medications/:medicationid', async(req, res) => {
     console.log('Error:', err);
   };
 });
+
+// Create new entry into patient_medication join table
+app.post('/patientmedication', async(req, res) => {
+  try {
+    const newPatientMed = await db.query(
+      'INSERT INTO patient_medication (patient_id, medication_id ) VALUES ($1, $2) returning *',
+      [req.body.patient_id, req.body.medication_id]
+    );
+    res.status(201).json(
+      {
+        status: 'Successfully created new patient medication relation!',
+        data: {
+          patient: newPatientMed.rows[0]
+        }
+      }
+    );
+  } catch (err) {
+    console.log('Error:', err);
+  };
+});
+
+// Read patient_medication join table
+app.get('/patientmedication', async(req, res) => {
+  try {
+    const patientMedications = await db.query(
+      'SELECT * FROM patient_medication;'
+    );
+    res.status(200).json(
+      {
+        status: 'Success!',
+        results: patientMedications.rows.length,
+        data: {
+          medications: patientMedications.rows
+        }
+      }
+    );
+  } catch (err) {
+    console.log('Error:', err);
+  };
+});
+
 
 // Listens on port for connections
 app.listen(port, () => {
