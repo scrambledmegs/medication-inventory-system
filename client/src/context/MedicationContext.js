@@ -4,8 +4,10 @@ export const MedicationContext = createContext();
 
 export const MedicationContextProvider = props => {
   const [medications, setMedications] = useState([]);
+  const [selectMedToUpdate, setSelectMedToUpdate] = useState({})
 
   console.log('MEDS IN MCP:', medications);
+  console.log('SELECT MED TO UPDATE IN MCP:', selectMedToUpdate)
 
   const addMedication = medication => {
     console.log('MED IN MC:', medication);
@@ -21,7 +23,9 @@ export const MedicationContextProvider = props => {
       value={{
         medications,
         setMedications,
-        addMedication
+        addMedication,
+        selectMedToUpdate,
+        setSelectMedToUpdate
       }}
     >
       {props.children}
