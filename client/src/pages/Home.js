@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Home.css';
+
+// React Router
 import { Link } from 'react-router-dom';
 
 // Bootstrap
@@ -11,10 +13,14 @@ import Button from 'react-bootstrap/Button';
 const Home = () => {
   return (
     <Container>
-      <Row className='test '>
+      <Row>
         <Col>
           <h1>Medication Admin/Inventory System</h1>
-          <div className='click-begin'>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <div>
             <Link to='/patients'>
               <Button variant='primary'>Click to Begin</Button>
             </Link>
@@ -23,6 +29,6 @@ const Home = () => {
       </Row>
     </Container>
   );
-}
+};
 
-export default Home
+export default Home;
