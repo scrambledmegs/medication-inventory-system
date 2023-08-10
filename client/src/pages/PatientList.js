@@ -12,45 +12,60 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 const PatientList = () => {
-  const { patients, setPatients, setSelectedPatient } = useContext(PatientContext);
+  const { 
+    patients, 
+    setPatients, 
+    setSelectedPatient 
+  } = useContext(PatientContext);
   let navigate = useNavigate();
 
-  // Get patient list from database
+  // Fetch all Patients from Database
   useEffect(() => {
-    PatientData.get('/')
-      .then(response => {
+    const fetchData = async() => {
+      try {
+        const response = await PatientData.get('/');
         console.log('RESPONSE PATIENT LIST:', response);
         setPatients(response.data.data.patients);
-      });
+      } catch (error) {
+      console.log('Error:', error);
+      };
+    };
+    fetchData();
   }, []);
 
-  // Delete Patient
-    const handleDelete = async (patientId) => {
-      PatientData.delete(`/${patientId}`)
-        .then(() => {
-          setPatients(prevPatients => {
-            const updatedPatients = prevPatients.filter(patient => patient.id !== patientId);
-            return updatedPatients;
-          });
-        });
+  // Delete Patient by ID
+  const handleDelete = async(patientId) => {
+    try {
+      await PatientData.delete(`/${patientId}`);
+      setPatients(prevPatients => {
+        const updatedPatients = prevPatients.filter(
+          patient => patient.id !== patientId
+        );
+        return updatedPatients;
+      });
+    } catch (error) {
+      console.log('Error:', error);
     };
+  };
 
     // Set Selected Patient by ID
-    const selectPatient = (patientId) => {
-      const patient = patients.filter(patient => patient.id === patientId);
+    const selectPatient = patientId => {
+      console.log('PATIENTID:', patientId);
+      const patient = patients.filter(
+        patient => patient.id === patientId
+        );
       setSelectedPatient(patient[0]);
-    }
+    };
 
-    const handleSelectPatient = patientId => {
-      PatientData.get(`/${patientId}`)
-        .then(response => {
-          console.log('RESPONSE SELECT:', response);
-          selectPatient(patientId);
-          navigate(`/patients/${patientId}`);
-        })
-        .catch (error => {
-          console.log('Error:', error);
-        });
+    const handleSelectPatient = async(patientId) => {
+      try {
+        const response = await PatientData.get(`/${patientId}`);
+        console.log('RESPONSE SELECT:', response);
+        selectPatient(patientId);
+        navigate(`/patients/${patientId}`);
+      } catch (error) {
+        console.log('Error:', error);
+      };
     };
 
   return (
@@ -70,7 +85,7 @@ const PatientList = () => {
                   variant='primary'
                   action 
                   onClick={() => handleSelectPatient(patient.id)}
-                  >
+                >
                   {patient.name}
                 </ListGroup.Item>
                 <ListGroup.Item as='li'>
