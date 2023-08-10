@@ -2,11 +2,12 @@ import React, { useContext, useEffect } from 'react';
 import PatientData from '../apis/PatientData';
 import { PatientContext } from '../context/PatientContext';
 
-// Bootstrap
-import ListGroup from 'react-bootstrap/ListGroup';
-
 // React Router
 import { useNavigate } from 'react-router-dom';
+
+// Bootstrap
+import ListGroup from 'react-bootstrap/ListGroup';
+import Button from 'react-bootstrap/Button';
 
 const Patient = () => {
   const {
@@ -14,17 +15,23 @@ const Patient = () => {
     patientMedications, 
     setPatientMedications, 
     selectedMedication, 
-    setSelectedMedication 
+    setSelectedMedication
   } = useContext(PatientContext);
+
   let navigate = useNavigate();
 
-  // Fetch List of Meds by Patient ID
+  // Fetch List of Medications by Patient ID
   useEffect(() => {
-    PatientData.get(`/${selectedPatient.id}/medications`)
-      .then(response => {
-        console.log('RESPONSE MEDICATIONS:', response);
+    const fetchData = async() => {
+      try {
+        const response = await PatientData.get(`/${selectedPatient.id}/medications`);
+        console.log('RESPONSE PATIENT MEDICATIONS:', response);
         setPatientMedications(response.data);
-      });
+      } catch (error) {
+        console.log('Error:', error);
+      };
+    };
+    fetchData();
   }, []);
 
   // Set Selected Medication by ID
@@ -42,21 +49,26 @@ const Patient = () => {
       );
   };
 
-  const medications = patientMedications.map(medication => {
+  // Map through Patient Medication Object
+  const patientMedList = patientMedications.map(patientMedication => {
+    console.log('PATIENT MED LIST ID:', patientMedication.medication_id)
     return  (
       <ListGroup.Item
-        action onClick = {
-          () => handleSelectMedication(medication.medication_id)
+        key={patientMedication.medication_id}
+        action 
+        onClick = {
+          () => handleSelectMedication(patientMedication.medication_id)
         }
       >
-        {medication.med_name}
+        {patientMedication.med_name}
       </ListGroup.Item>
     );
   });
 
   return (
     <div>
-      <h1>Patient</h1>
+      <h1>Patient Medication</h1>
+
         {selectedPatient.name}
         <br />
         {selectedPatient.mrn} 
@@ -69,10 +81,21 @@ const Patient = () => {
         <br />
         {selectedPatient.department}
         <br />
-      <h2>Medications</h2>
         <ListGroup>
-          {medications}
+          <ListGroup.Item
+            as='li' 
+            variant='primary'
+          >
+            Assigned Medications
+          </ListGroup.Item>
+          {patientMedList}
         </ListGroup>
+        <div>
+        <Button
+        >
+          Assign Medication to Patient
+        </Button>
+        </div>
     </div>
   );
 };
