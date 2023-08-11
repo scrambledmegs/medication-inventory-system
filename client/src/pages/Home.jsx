@@ -13,7 +13,7 @@ const Home = () => {
   return (
     <main>
       <Container>
-        <Row className='heading'>
+        <Row>
           <Col>
             <h1>Medication Admin/Inventory System</h1>
           </Col>
