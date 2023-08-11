@@ -6,10 +6,11 @@ import Patient from './pages/Patient';
 import AdmitPatient from './pages/AdmitPatient';
 import PatientMedication from './pages/PatientMedication';
 import MedicationList from './pages/MedicationList';
+import AssignMedication from './pages/AssignMedication';
 import UpdateQuantity from './pages/UpdateQuantity';
+import MedicationForm from './pages/MedicationForm';
 import { PatientContextProvider } from './context/PatientContext';
 import { MedicationContextProvider } from './context/MedicationContext';
-import MedicationForm from './pages/MedicationForm';
 import './App.css';
 
 // React Router
@@ -44,6 +45,10 @@ function App() {
             <Route 
               path='/medications/:medicationid/update' 
               element={<UpdateQuantity />} 
+            />
+            <Route 
+              path='/assignMedication' 
+              element={<AssignMedication />} 
             />
           </Routes>
         </Container>
