@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 // Bootstrap
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 const Patient = () => {
   const {
@@ -49,6 +51,10 @@ const Patient = () => {
       );
   };
 
+  const handleAssignMedication =() => {
+    navigate(`/assignMedication`)
+  }
+
   // Map through Patient Medication Object
   const patientMedList = patientMedications.map(patientMedication => {
     console.log('PATIENT MED LIST ID:', patientMedication.medication_id)
@@ -67,31 +73,42 @@ const Patient = () => {
 
   return (
     <div>
-      <h1>Patient Medication</h1>
-
-        {selectedPatient.name}
-        <br />
-        {selectedPatient.mrn} 
-        <br />
-        {selectedPatient.dob}
-        <br />
-        {selectedPatient.allergies}
-        <br />
-        {selectedPatient.room_number}
-        <br />
-        {selectedPatient.department}
-        <br />
-        <ListGroup>
-          <ListGroup.Item
-            as='li' 
-            variant='primary'
-          >
-            Assigned Medications
-          </ListGroup.Item>
-          {patientMedList}
-        </ListGroup>
+      <Row>
+        <Col>
+          <h1>{selectedPatient.name}</h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          Allergies: {selectedPatient.allergies}
+        </Col>
+        <Col>
+          DOB: {selectedPatient.dob}
+        </Col>
+        <Col>
+          MRN: {selectedPatient.mrn} 
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          Room: {selectedPatient.room_number}
+        </Col>
+        <Col>
+          {selectedPatient.department}
+        </Col>
+      </Row>
+      <ListGroup>
+        <ListGroup.Item
+          as='li' 
+          variant='primary'
+        >
+          Assigned Medications
+        </ListGroup.Item>
+        {patientMedList}
+      </ListGroup>
         <div>
         <Button
+          onClick={() => handleAssignMedication()}
         >
           Assign Medication to Patient
         </Button>
