@@ -139,7 +139,7 @@ const MedicationForm = () => {
               <Form.Control
                 as='textarea'
                 rows = {2}
-                placeholder='ex: Obtain EKG prior to admin. Risk of qt longation.'
+                placeholder='ex: Risk of prolonged QT interval.'
                 value={highAlert}
                 onChange={e => setHighAlert(e.target.value)}
               />
