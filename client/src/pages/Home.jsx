@@ -1,4 +1,5 @@
 import React from 'react';
+import Logo from '../components/Logo'
 import './Home.css';
 
 // React Router
@@ -12,17 +13,19 @@ import Col from 'react-bootstrap/Col';
 const Home = () => {
   return (
     <main>
-      <Container>
+      <Container className='home-container'>
         <Row>
           <Col>
-            <h1>Medication Admin/Inventory System</h1>
+            <Logo className='logo'/>
           </Col>
         </Row>
         <Row>
           <Col>
             <div className='click-begin'>
               <Link to='/patients'>
-                <button className='home-btn'>Click to Begin</button>
+                <button className='home-btn'>
+                  Click to Begin
+                </button>
               </Link>
             </div>
           </Col>
