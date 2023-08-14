@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import PatientData from '../apis/PatientData';
+
+// Context Provider
 import { PatientContext } from '../context/PatientContext';
 
 // React Router
@@ -28,7 +30,7 @@ const PatientList = () => {
         console.log('RESPONSE PATIENT LIST:', response);
         setPatients(response.data.data.patients);
       } catch (error) {
-      console.log('Error:', error);
+      console.error('Error:', error.message);
       };
     };
     fetchData();
@@ -45,7 +47,7 @@ const PatientList = () => {
         return updatedPatients;
       });
     } catch (error) {
-      console.log('Error:', error);
+      console.error('Error:', error.message);
     };
   };
 
@@ -65,15 +67,16 @@ const PatientList = () => {
 
   return (
     <main>
+      <h1>Emergency Department</h1>
       {patients && patients.map(patient => {
         return (
-          <Accordion>
+          <Accordion key={patient.id}>
             <Accordion.Item 
               eventKey='0'
             >
               <Row>              
                 <Accordion.Header
-                  key={patient.id}
+                  
                 >
                   <Col>
                     {patient.name}
