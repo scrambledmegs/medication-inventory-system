@@ -1,19 +1,26 @@
 .click-begin {
-    padding: 5rem;
-    border: 1px solid white;
     border-radius: 10px;
-    margin-right: 5rem;
-    margin-left: 5rem;
-    display: flex;
-    justify-content: center;
 }
 
 .home-btn {
-    margin-top: 2rem;
     border: none;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     cursor: pointer;
-    color: #7439db;
+    color: #243665;
+}
+
+.logo {
+    margin: 10rem 0;
+    height: 40vh;
+    border-radius: 10px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
