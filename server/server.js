@@ -6,7 +6,7 @@ const app = express();
 const port = process.env.PORT || 4001;
 
 // Middleware
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
 // Create New Patient
@@ -24,8 +24,8 @@ app.post('/patients', async(req, res) => {
         }
       }
     );
-  } catch (err) {
-    console.log('Error 1:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -43,8 +43,8 @@ app.post('/medications', async (req, res) => {
         }
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -63,8 +63,8 @@ app.get('/patients', async(req, res) => {
         }
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -83,8 +83,8 @@ app.get('/medications', async(req, res) => {
         }
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -96,8 +96,8 @@ app.get('/patients/:patientid', async(req, res) => {
       WHERE patient.id = ${req.params.patientid}`
     );
     res.json(patient.rows);
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -109,8 +109,8 @@ app.get('/medications/:medicationid', async (req, res) => {
       WHERE medication.id = ${req.params.medicationid}`
     );
     res.json(medication.rows);
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -127,8 +127,8 @@ app.get('/patients/:patientid/medications', async (req, res) => {
       WHERE patient.id = ${req.params.patientid}`
     );
     res.json(patientMedicationList.rows);
-  } catch (err) {
-    console.log('Error:', err)
+  } catch (error) {
+    console.error('Error:', error.message)
   };
 });
 
@@ -147,8 +147,8 @@ app.put('/patients/:patientid', async(req, res) => {
         }
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -168,8 +168,8 @@ app.put('/medications/:medicationid', async(req, res) => {
         }
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -186,10 +186,11 @@ app.patch('/medications/:medicationid', async(req, res) => {
     let query = 'UPDATE medication SET';
 
     for (const key in object) {
-      console.log(key);
+      console.log('KEY:', key);
       if (object[key]){ 
         updateData.push(object[key]);
         query = query + ` ${key} = $${updateData.length},`
+        console.log(`KEY:${key} = $${updateData.length}`)
       };
     };
     
@@ -205,8 +206,8 @@ app.patch('/medications/:medicationid', async(req, res) => {
         }
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -222,8 +223,8 @@ app.delete('/patients/:patientid', async(req, res) => {
         status: 'Patient successfully deleted from system.'
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -239,28 +240,28 @@ app.delete('/medications/:medicationid', async(req, res) => {
         status: 'Patient successfully deleted from system.'
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
 // Create new entry into patient_medication join table
 app.post('/patientmedication', async(req, res) => {
   try {
-    const newPatientMed = await db.query(
-      'INSERT INTO patient_medication (patient_id, medication_id ) VALUES ($1, $2) returning *',
+    const newPatientMedication = await db.query(
+      'INSERT INTO patient_medication (patient_id, medication_id) VALUES ($1, $2) returning *',
       [req.body.patient_id, req.body.medication_id]
     );
     res.status(201).json(
       {
-        status: 'Successfully created new patient medication relation!',
+        status: 'Successfully assigned medication to patient!',
         data: {
-          patient: newPatientMed.rows[0]
+          patient: newPatientMedication.rows[0]
         }
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
@@ -279,11 +280,27 @@ app.get('/patientmedication', async(req, res) => {
         }
       }
     );
-  } catch (err) {
-    console.log('Error:', err);
+  } catch (error) {
+    console.error('Error:', error.message);
   };
 });
 
+// Delete Medication Assigned to Patient
+app.delete('/patientmedication/:patientid/:medicationid', async(req, res) => {
+  try {
+    const deleteMedicationAssignment = await db.query(
+      'DELETE FROM patient_medication WHERE patient_id = $1 AND medication_id = $2',
+      [req.params.patientid, req.params.medicationid]
+    );
+    res.status(200).json(
+      {
+        status: 'Unassigned Medication from patient.'
+      }
+    );
+  } catch (error) {
+    console.error('Error:', error.message);
+  };
+});
 
 // Listens on port for connections
 app.listen(port, () => {
