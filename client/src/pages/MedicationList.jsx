@@ -1,5 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import MedicationData from '../apis/MedicationData';
+
+// Context Provider
 import { MedicationContext } from '../context/MedicationContext';
 
 // React Router
@@ -8,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 // Bootstrap
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
+import Accordion from 'react-bootstrap/Accordion';
 
 const MedicationList = () => {
   const { 
@@ -24,9 +27,9 @@ const MedicationList = () => {
           const response = await MedicationData.get('/');
           setMedications(response.data.data.medications);
         } catch (error) {
-          console.log('Error:', error);
-        }
-      }
+          console.error('Error:', error.message);
+        };
+      };
       fetchData();
     }, []);
 
@@ -39,13 +42,13 @@ const MedicationList = () => {
         return updatedMedications;
       });
     } catch (error) {
-      console.log('Error:', error);
+      console.error('Error:', error.message);
     };
   };
 
   // Select Medication by ID
   const selectMed = (medicationId) => {
-    console.log('MED ID:', medicationId)
+    console.log('MED ID:', medicationId);
     const medication = medications.filter(medication => medication.id === medicationId);
     setSelectMedToUpdate(medication[0]);
   }
@@ -57,55 +60,55 @@ const MedicationList = () => {
       selectMed(medicationId);
       navigate(`/medications/${medicationId}/update`);
     } catch (error) {
-      console.log('Error:', error);
+      console.error('Error:', error.message);
     };
   };
 
   return (
     <main>
-      <h1>Medication List</h1>
+      <h1>Medications</h1>
       {medications && medications.map(medication => {
         return (
-          <ListGroup 
-            as='ul' 
-            key={medication.id}
-          >
-            <ListGroup.Item 
-              as='li' 
-              variant='primary'
-            >
-              {medication.med_name}
-            </ListGroup.Item>
-            <ListGroup.Item as='li'>
-              Dose: {medication.dose}
-            </ListGroup.Item>
-            <ListGroup.Item as='li'>
-              Form: {medication.form}
-            </ListGroup.Item>
-            <ListGroup.Item as='li'>
-              Frequency: {medication.frequency}
-            </ListGroup.Item>
-            <ListGroup.Item as='li'>
-              Quantity: {medication.quantity}
-            </ListGroup.Item>
-            <ListGroup.Item as='li'>
-              {medication.high_alert}
-            </ListGroup.Item>
-            <ListGroup.Item as='li'>
-              <Button
-                onClick={() => handleDelete(medication.id)}
-              >
-                Delete Medication
-              </Button>
-              <Button
-                onClick={() => handleMedicationUpdate(medication.id)}
-              >
-                Update Medication Inventory
-              </Button>
-            </ListGroup.Item>
-          </ListGroup>
-        )}
-      )}
+          <Accordion key={medication.id}>
+            <Accordion.Item eventKey='0'>
+              <Accordion.Header>
+                {medication.med_name}
+              </Accordion.Header>
+              <Accordion.Body>
+                <ListGroup>
+                  <ListGroup.Item>
+                    Dose: {medication.dose}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Form: {medication.form}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Frequency: {medication.frequency}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Alert: {medication.high_alert}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Inventory Count: {medication.quantity}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Button
+                      onClick={() => handleDelete(medication.id)}
+                    >
+                      Delete Medication
+                    </Button>
+                    <Button
+                      onClick={() => handleMedicationUpdate(medication.id)}
+                    >
+                      Update Medication Inventory
+                    </Button>
+                  </ListGroup.Item>
+                </ListGroup>
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+        );
+      })}
     </main>
   );
 };
