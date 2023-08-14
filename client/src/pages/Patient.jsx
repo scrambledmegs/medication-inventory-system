@@ -1,5 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import PatientData from '../apis/PatientData';
+import PatientMedicationData from '../apis/PatientMedicationData';
+
+// Context Provider
 import { PatientContext } from '../context/PatientContext';
 
 // React Router
@@ -10,6 +13,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Accordion from 'react-bootstrap/Accordion';
 
 const Patient = () => {
   const {
@@ -30,7 +34,7 @@ const Patient = () => {
         console.log('RESPONSE PATIENT MEDICATIONS:', response);
         setPatientMedications(response.data);
       } catch (error) {
-        console.log('Error:', error);
+        console.error('Error:', error.message);
       };
     };
     fetchData();
@@ -44,32 +48,31 @@ const Patient = () => {
     setSelectedMedication(medication[0]);
   }
 
-  const handleSelectMedication = (medicationId) => {
+  const handleSelectMedication = medicationId => {
     selectMedication(medicationId);
     navigate(
       `/patients/${selectedPatient.id}/${selectedMedication.medication_id}`
       );
   };
 
+  // Navigate to Assign Medication Form Page
   const handleAssignMedication =() => {
-    navigate(`/assignMedication`)
-  }
+    navigate(`/assignMedication`);
+  };
 
-  // Map through Patient Medication Object
-  const patientMedList = patientMedications.map(patientMedication => {
-    console.log('PATIENT MED LIST ID:', patientMedication.medication_id)
-    return  (
-      <ListGroup.Item
-        key={patientMedication.medication_id}
-        action 
-        onClick = {
-          () => handleSelectMedication(patientMedication.medication_id)
-        }
-      >
-        {patientMedication.med_name}
-      </ListGroup.Item>
-    );
-  });
+  // Unassign Medication from Patient
+  const handleUnassignMed = async(medicationId) => {
+    console.log('MEDICATIONID:', medicationId)
+    console.log('PATIENTMEDICATIONS:', patientMedications)
+    try {
+      await PatientMedicationData.delete(`/${selectedPatient.id}/${medicationId}`);
+      setPatientMedications(patientMedications.filter(
+          patientMedication => patientMedication.medication_id != medicationId
+        ));
+    } catch (error) {
+      console.error('Error:', error.message);
+    };
+  };
 
   return (
     <div>
@@ -97,22 +100,49 @@ const Patient = () => {
           {selectedPatient.department}
         </Col>
       </Row>
-      <ListGroup>
-        <ListGroup.Item
-          as='li' 
-          variant='primary'
-        >
-          Assigned Medications
-        </ListGroup.Item>
-        {patientMedList}
-      </ListGroup>
-        <div>
-        <Button
-          onClick={() => handleAssignMedication()}
-        >
-          Assign Medication to Patient
-        </Button>
-        </div>
+      <Button
+        onClick={handleAssignMedication}
+      >
+        Assign Med
+      </Button>
+      {patientMedications && patientMedications.map(patientMed => {
+        return (
+          <Accordion key={patientMed.medication_id}>
+            <Accordion.Item eventKey="0">
+              <Accordion.Header>{patientMed.med_name}</Accordion.Header>
+              <Accordion.Body>
+                <ListGroup>
+                  <ListGroup.Item>
+                    Dose: {patientMed.dose}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Form: {patientMed.form}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Frequency: {patientMed.frequency}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    Alert: {patientMed.high_alert}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <Button
+                      onClick={() => handleSelectMedication(patientMed.medication_id)}
+                    >
+                        More Info
+                    </Button>
+                    <Button
+                      onClick={() => handleUnassignMed(patientMed.medication_id)}
+                    >
+                      Unassign Medication
+                    </Button>
+                  </ListGroup.Item>
+                </ListGroup>
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+          );
+        })
+      }
     </div>
   );
 };
