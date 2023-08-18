@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import PatientData from '../apis/PatientData';
 import PatientMedicationData from '../apis/PatientMedicationData';
+import './Patient.css'
 
 // Context Provider
 import { PatientContext } from '../context/PatientContext';
@@ -12,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Accordion from 'react-bootstrap/Accordion';
 
 const Patient = () => {
@@ -62,8 +62,6 @@ const Patient = () => {
 
   // Unassign Medication from Patient
   const handleUnassignMed = async(medicationId) => {
-    console.log('MEDICATIONID:', medicationId)
-    console.log('PATIENTMEDICATIONS:', patientMedications)
     try {
       await PatientMedicationData.delete(`/${selectedPatient.id}/${medicationId}`);
       setPatientMedications(patientMedications.filter(
@@ -75,75 +73,64 @@ const Patient = () => {
   };
 
   return (
-    <div>
-      <Row>
-        <Col>
-          <h1>{selectedPatient.name}</h1>
-        </Col>
+    <main className='patient-container'>
+      <h1>{selectedPatient.name}</h1>
+      <Row className='assign-row'>
+        <button
+          className='assign-btn'
+          onClick={handleAssignMedication}
+        >
+          Assign Med
+        </button>
       </Row>
-      <Row>
-        <Col>
-          Allergies: {selectedPatient.allergies}
-        </Col>
-        <Col>
-          DOB: {selectedPatient.dob}
-        </Col>
-        <Col>
-          MRN: {selectedPatient.mrn} 
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          Room: {selectedPatient.room_number}
-        </Col>
-        <Col>
-          {selectedPatient.department}
-        </Col>
-      </Row>
-      <Button
-        onClick={handleAssignMedication}
-      >
-        Assign Med
-      </Button>
-      {patientMedications && patientMedications.map(patientMed => {
-        return (
-          <Accordion key={patientMed.medication_id}>
-            <Accordion.Item eventKey="0">
-              <Accordion.Header>{patientMed.med_name}</Accordion.Header>
-              <Accordion.Body>
-                <ListGroup>
-                  <ListGroup.Item>
-                    Dose: {patientMed.dose}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    Form: {patientMed.form}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    Frequency: {patientMed.frequency}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    Alert: {patientMed.high_alert}
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Button
-                      onClick={() => handleSelectMedication(patientMed.medication_id)}
-                    >
-                        More Info
-                    </Button>
-                    <Button
-                      onClick={() => handleUnassignMed(patientMed.medication_id)}
-                    >
-                      Unassign Medication
-                    </Button>
-                  </ListGroup.Item>
-                </ListGroup>
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
-          );
-        })
-      }
-    </div>
+      <div className='pt-list-container'>
+        {patientMedications && patientMedications.map(patientMed => {
+          return (
+            <div>
+            <Accordion
+              key={patientMed.medication_id}
+              className='pt-list-accordion'
+            >
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>{patientMed.med_name}</Accordion.Header>
+                <Accordion.Body>
+                  <ListGroup>
+                    <ListGroup.Item>
+                      Dose: {patientMed.dose}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      Form: {patientMed.form}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      Frequency: {patientMed.frequency}
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      Alert: {patientMed.high_alert}
+                    </ListGroup.Item>
+                    <ListGroup.Item className='btn-sect'>
+                      <Button
+                        className='remove-discon-btn'
+                        onClick={() => handleSelectMedication(patientMed.medication_id)}
+                      >
+                        Remove Med
+                      </Button>
+                      <Button
+                        className='remove-discon-btn'
+                        onClick={() => handleUnassignMed(patientMed.medication_id)}
+                      >
+                        Discontinue Medication
+                      </Button>
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+            </div>
+            );
+          })
+        }
+      </div>
+    </main>
   );
 };
 
