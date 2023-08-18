@@ -1,8 +1,76 @@
 .App {
     display: flex;
     min-height: 100vh;
+    width: 100%;
     max-width: 100vw;
     justify-content: center;
     color: white;
-    background-image: linear-gradient(79deg, #7439db, #C66FBC 48%, #F7944D);
+    background-image: linear-gradient(to bottom, #8bd8bd, #4ab1b2, #0988a3, #055f8a, #243665);
+}
+
+.container {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 100%;
+    }
+}
+
+.row {
+    --bs-gutter-x: 0;
+}
+
+/* Primary Button Style */
+.btn-primary {
+    border: none;
+    width: 10em;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+    background-color: #73cab9;
+    color: white;
+    box-shadow: 0 0.4rem #dfd9d9;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #FF6B6B;
+    color: white;
+}
+
+.btn-primary:active {
+    color: white;
+    background-color: #FF6B6B;
+    box-shadow: 0 0.2rem #dfd9d9;
+    --bs-btn-active-bg: #FF6B6B;
+}
+
+/* Accordion Style */
+.accordion {
+    max-width: 40rem;
+    width: 40rem;
+    margin: 0.2rem
+}
+
+.accordion-button {
+    font-size: 1.2rem;
+    color: #134d7a;
+}
+
+.accordion-button:not(.collapsed) {
+    color: white;
+    background-color: #FF6B6B;
+}
+
+.card {
+    width: 20rem;
+}
+
+.card {
+    padding-bottom: 2rem;
+    margin: 0;
 }
