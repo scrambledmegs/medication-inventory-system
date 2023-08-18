@@ -1,55 +1,55 @@
 import React, { useContext, useState } from 'react';
-import { MedicationContext } from '../context/MedicationContext';
 import MedicationData from '../apis/MedicationData';
+import './UpdateInventoryForm.css'
+
+// Context Provider
+import { MedicationContext } from '../context/MedicationContext';
 
 // Bootstrap
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
 
 const UpdateQuantity = () => {
   const { selectMedToUpdate } = useContext(MedicationContext);
     const [quantity, setQuantity] = useState('');
 
-
-  console.log('SELECTED MED TO UPDATE:', selectMedToUpdate);
-  console.log('SELECTED MED TO UPDATE ID:', selectMedToUpdate.id);
-  console.log('SELECTED MED TO UPDATE QUANT:', selectMedToUpdate.quantity);
-  console.log('QUANT STATE:', quantity);
-
   const updateMedicationQuantity = async(event) => {
     event.preventDefault();
     try {
       const response = await MedicationData.patch(`/${selectMedToUpdate.id}`, {'quantity': quantity});
-      console.log('UPDATE MED QUANT DATA:', response.data);
       setQuantity('');
     } catch (error) {
-      console.log('Error:', error);
+      console.error('Error:', error);
     };
   };
 
   return (
-    <div>
-      <h1>Update Quantity</h1>
+    <main className='update-container'>
+      <h1>Update {selectMedToUpdate.med_name} Quantity</h1>
       <Form
+        className='update-inventory-form'
         onSubmit={updateMedicationQuantity}
       >
-      <Form.Group className="mb-3" controlId="updateQuantity">
-        <Form.Label>{selectMedToUpdate.med_name} Inventory:</Form.Label>
-        <Form.Control 
-          type="text" 
-          placeholder="ex: 20"
-          value={quantity}
-          onChange={event => setQuantity(event.target.value)}
-        />
-      </Form.Group>
-      <Button
-        variant="primary" 
-        type="submit"
-      >
-        Update
-      </Button>
-    </Form>
-    </div>
+        <Form.Group className="mb-3" controlId="updateQuantity">
+          <Form.Label>Inventory Count:</Form.Label>
+          <Form.Control 
+            type="text" 
+            placeholder="ex: 20"
+            value={quantity}
+            onChange={event => setQuantity(event.target.value)}
+          />
+        </Form.Group>
+        <Row className='submit-row'>
+          <Button
+            variant="primary" 
+            type="submit"
+          >
+            Update
+          </Button>
+        </Row>
+      </Form>
+    </main>
   );
 };
 
