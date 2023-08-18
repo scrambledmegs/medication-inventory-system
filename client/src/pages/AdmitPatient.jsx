@@ -1,6 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { PatientContext } from '../context/PatientContext';
 import PatientData from '../apis/PatientData';
+import './AdmitPatient.css'
+
+// Context Provider
+import { PatientContext } from '../context/PatientContext';
 
 // Bootstrap
 import Form from 'react-bootstrap/Form';
@@ -48,7 +51,6 @@ const AdmitPatient = () => {
         room_number: roomNumber,
         department
       });
-      console.log('ADMIT RESPONSE:', response.data.data);
       addPatient(response.data.data.patient);
       submitMessageShow();
       setName('');
@@ -57,14 +59,14 @@ const AdmitPatient = () => {
       setAllergies('');
       setRoomNumber('');
       setDepartment('');
-    } catch (err) {
-      console.log('Error:', err);
+    } catch (error) {
+      console.error('Error:', error.message);
     };
   };
 
   return (
-    <main>
-      <h1>New Patient Admit</h1>
+    <main className='admit-form'>
+      <h1 className='page-heading'>New Patient Admit</h1>
       <Form 
         noValidate
         validated={validated}
@@ -148,13 +150,15 @@ const AdmitPatient = () => {
             </Form.Group>
           </Col>
         </Row>
-        <Button
-          variant='primary'
-          type='submit'
-          onClick={submitMessageShow}
-        >
-          Admit Patient
-        </Button>
+        <Row className='btn-row'>
+          <Button
+            variant='primary'
+            type='submit'
+            onClick={submitMessageShow}
+          >
+            Admit Patient
+          </Button>
+        </Row>
       </Form>
 
       <Modal
