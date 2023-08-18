@@ -19,7 +19,6 @@ import { MedicationContextProvider } from './context/MedicationContext';
 import { Route, Routes } from 'react-router-dom';
 
 // Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
@@ -30,7 +29,7 @@ function App() {
       <PatientContextProvider >
         <MedicationContextProvider>
           <Container>
-            <Row>
+            <Row className='nav-row'>
               <NavigationBar />
             </Row>
             <Routes> 
