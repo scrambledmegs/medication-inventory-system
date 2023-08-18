@@ -1,0 +1,19 @@
+.assign-container {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.assign-form {
+    margin: 2rem 20rem;
+}
+
+.submit-row {
+    display: flex;
+    justify-content: center;
+}
+
+.assign-container > h1 {
+    text-align: center;
+    margin-top: 2rem;
+}
