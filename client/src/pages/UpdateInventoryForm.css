@@ -1,0 +1,14 @@
+.update-container {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.update-container > h1 {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.update-inventory-form {
+    margin: 2rem  20rem;
+}
