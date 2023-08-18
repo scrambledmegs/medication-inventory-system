@@ -2,12 +2,16 @@ import React, { useEffect, useState, useContext} from 'react';
 import PatientData from '../apis/PatientData';
 import MedicationData from '../apis/MedicationData';
 import PatientMedicationData from '../apis/PatientMedicationData';
+import './AssignMedication.css';
+
+// Context Provider
 import { PatientContext } from '../context/PatientContext';
 import { MedicationContext } from '../context/MedicationContext';
 
 // Bootstrap
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
 
 const AssignMedication = () => {
   const { patients, setPatients } = useContext(PatientContext);
@@ -22,7 +26,7 @@ const AssignMedication = () => {
         const response = await PatientData.get('/');
         setPatients(response.data.data.patients);
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error.message);
       };
       try {
         const response = await MedicationData.get('/');
@@ -59,8 +63,10 @@ const AssignMedication = () => {
   };
 
   return (
-    <main>
+    <main className='assign-container'>
+      <h1>Assign Medication</h1>
       <Form
+        className='assign-form'
         onSubmit={handleSubmit}
       >
         <Form.Group
@@ -87,12 +93,15 @@ const AssignMedication = () => {
             onChange={e => setSelectedMedicationName(e.target.value)}
           />
         </Form.Group>
-        <Button
-          variant='primary'
-          type='submit'
-        >
-          Assign Medication
-        </Button>
+        <Row className='submit-row'>
+          <Button
+            className='assign-submit-btn'
+            variant='primary'
+            type='submit'
+          >
+            Submit
+          </Button>
+        </Row>
       </Form>
     </main>
   );
