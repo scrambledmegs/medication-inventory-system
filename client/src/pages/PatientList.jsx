@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import PatientData from '../apis/PatientData';
+import './PatientList.css';
 
 // Context Provider
 import { PatientContext } from '../context/PatientContext';
@@ -27,7 +28,6 @@ const PatientList = () => {
     const fetchData = async() => {
       try {
         const response = await PatientData.get('/');
-        console.log('RESPONSE PATIENT LIST:', response);
         setPatients(response.data.data.patients);
       } catch (error) {
       console.error('Error:', error.message);
@@ -53,7 +53,6 @@ const PatientList = () => {
 
     // Set Selected Patient by ID
     const selectPatient = patientId => {
-      console.log('PATIENTID:', patientId);
       const patient = patients.filter(
         patient => patient.id === patientId
         );
@@ -66,58 +65,57 @@ const PatientList = () => {
     };
 
   return (
-    <main>
+    <main className='pt-list-container'>
       <h1>Emergency Department</h1>
       {patients && patients.map(patient => {
         return (
-          <Accordion key={patient.id}>
-            <Accordion.Item 
-              eventKey='0'
-            >
-              <Row>              
-                <Accordion.Header
-                  
-                >
-                  <Col>
-                    {patient.name}
-                  </Col>
-                  <Col>
-                    Room: {patient.room_number}
-                  </Col>
-                </Accordion.Header>
-              </Row>
-                <Accordion.Body>
-                  <ListGroup>
-                    <ListGroup.Item>
-                      DOB: {patient.dob}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      MRN: {patient.mrn}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      Allergies: {patient.allergies}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {patient.department}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      <Button
-                        onClick={()=> handleDelete(patient.id)}
-                      >
-                        Discharge Patient
-                      </Button>
-                      <Button
-                        onClick={() => handleSelectPatient(patient.id)}
-                      >
-                        Medications
-                      </Button>
-                    </ListGroup.Item>
-                  </ListGroup>
-                </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
-        );
-      })}
+            <Accordion key={patient.id}>
+              <Accordion.Item eventKey='0'>
+                <Row>              
+                  <Accordion.Header>
+                    <Col>
+                      {patient.name}
+                    </Col>
+                    <Col className='pt-room'>
+                      Room: {patient.room_number}
+                    </Col>
+                  </Accordion.Header>
+                </Row>
+                  <Accordion.Body>
+                    <ListGroup className='pt-list-group'>
+                      <ListGroup.Item className='pt-list-item'>
+                        DOB: {patient.dob}
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        MRN: {patient.mrn}
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        Allergies: {patient.allergies}
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        {patient.department}
+                      </ListGroup.Item>
+                      <ListGroup.Item className='btn-sect'>
+                        <Button
+                          className='discharge-btn'
+                          onClick={()=> handleDelete(patient.id)}
+                        >
+                          Discharge Patient
+                        </Button>
+                        <Button
+                          className='pt-meds-btn'
+                          onClick={() => handleSelectPatient(patient.id)}
+                        >
+                          Medications
+                        </Button>
+                      </ListGroup.Item>
+                    </ListGroup>
+                  </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+          );
+        })
+      }
     </main>
   );
 };
