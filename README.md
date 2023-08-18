@@ -2,10 +2,13 @@ PharmaLogix: A Medication Inventory System
 
 Description & Features:
 - Inventory system to keep count of medication leaving the system.
-- Sends an automatic notification to central pharmacy when a medication in a specific department hits a certain threshold.
+- Sends an automatic notification to central pharmacy to restock when a medication in a specific department hits a certain threshold.
 - Admit new patients into the system.
-- Add new medications into the system. 
-- Assign medications to patients.
+- Discharge a patient.
+- Add new medications into the system.
+- Delete a medication.
+- Assign and unassign medications to patients.
+- Update inventory count of medication.
 
 Dependencies back end:
 - cors
