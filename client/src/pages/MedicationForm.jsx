@@ -1,5 +1,8 @@
 import React, { useContext, useState } from 'react';
 import MedicationData from '../apis/MedicationData';
+import './MedicationForm.css'
+
+// Context Provider
 import { MedicationContext } from '../context/MedicationContext';
 
 // Bootstrap
@@ -10,7 +13,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 const MedicationForm = () => {
-  const { addMedication } = useContext(MedicationContext)
+  const { addMedication } = useContext(MedicationContext);
   const [medName, setMedName] = useState('');
   const [dose, setDose] = useState('');
   const [form, setForm] = useState('');
@@ -49,7 +52,6 @@ const MedicationForm = () => {
         quantity,
         high_alert: highAlert
       });
-      console.log('ADD MEDICATION RESPONSE:', response.data.data);
       addMedication(response.data.data.medication);
       submitMessageShow();
       setMedName('');
@@ -58,14 +60,14 @@ const MedicationForm = () => {
       setFrequency('');
       setQuantity('');
       setHighAlert('');
-    } catch (err) {
-      console.log('Error:', err);
+    } catch (error) {
+      console.error('Error:', error.message);
     };
   };
 
   return (
-    <div>
-      <h1>Add Medication</h1>
+    <main className='med-form'>
+      <h1 className='page-heading'>Add Medication</h1>
       <Form
         noValidate
         validated={validated}
@@ -146,12 +148,16 @@ const MedicationForm = () => {
             </Form.Group>
           </Col>
         </Row>
-        <Button
-          variant='primary'
-          type='submit'
+        <Row
+          className='btn-row'
         >
-          Add Medication
-        </Button>
+          <Button
+            variant='primary'
+            type='submit'
+          >
+            Add Medication
+          </Button>
+        </Row>
       </Form>
       <Modal
         show={submitMessage}
@@ -174,7 +180,7 @@ const MedicationForm = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </main>
   );
 };
 
