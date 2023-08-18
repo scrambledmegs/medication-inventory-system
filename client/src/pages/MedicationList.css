@@ -1,0 +1,15 @@
+.med-list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    max-width: 100%;
+    width: 100vw;
+}
+
+.med-list-container > h1 {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
