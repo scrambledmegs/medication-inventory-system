@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import MedicationData from '../apis/MedicationData';
+import './MedicationList.css';
 
 // Context Provider
 import { MedicationContext } from '../context/MedicationContext';
@@ -18,7 +19,7 @@ const MedicationList = () => {
     setMedications, 
     setSelectMedToUpdate
   } = useContext(MedicationContext);
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
   // Fetch all Medications from Database
     useEffect(() => {
@@ -48,7 +49,6 @@ const MedicationList = () => {
 
   // Select Medication by ID
   const selectMed = (medicationId) => {
-    console.log('MED ID:', medicationId);
     const medication = medications.filter(medication => medication.id === medicationId);
     setSelectMedToUpdate(medication[0]);
   }
@@ -56,7 +56,6 @@ const MedicationList = () => {
   const handleMedicationUpdate = async(medicationId) => {
     try {
       const response = await MedicationData.get(`/${medicationId}`);
-      console.log('UPDATE RESPONSE SELECT:', response.data[0]);
       selectMed(medicationId);
       navigate(`/medications/${medicationId}/update`);
     } catch (error) {
@@ -65,7 +64,7 @@ const MedicationList = () => {
   };
 
   return (
-    <main>
+    <main className='med-list-container'>
       <h1>Medications</h1>
       {medications && medications.map(medication => {
         return (
@@ -91,7 +90,7 @@ const MedicationList = () => {
                   <ListGroup.Item>
                     Inventory Count: {medication.quantity}
                   </ListGroup.Item>
-                  <ListGroup.Item>
+                  <ListGroup.Item className='btn-sect'>
                     <Button
                       onClick={() => handleDelete(medication.id)}
                     >
