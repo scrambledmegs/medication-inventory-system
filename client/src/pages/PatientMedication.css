@@ -1,0 +1,32 @@
+.remove-med-btn:disabled {
+    cursor: not-allowed;
+    background-color: grey;
+    pointer-events: none;
+    color: black;
+}
+
+.card {
+    margin: 10rem 15rem;
+    display: flex;
+    text-align: center;
+}
+
+.card-header {
+    background-color: #FF6B6B;
+    color: white;
+}
+
+.close-btn {
+    background-color: #008080;
+    color: white;
+}
+
+.modal-header {
+    background-color: #FFA500;
+}
+
+.pt-med-container {
+    margin-top: 10rem;
+    display: flex;
+    justify-content: center;
+}
